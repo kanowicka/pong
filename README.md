@@ -1,3 +1,3 @@
 # Simple Pong Game
 
-Based on file:///Users/karolina/Development/pong/index.html
+Based on https://blog.atena.pl/pong-pisanie-prostych-gier-2d-w-jezyku-javascript
