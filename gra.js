@@ -66,19 +66,6 @@ function graReset() {
     pong.gracze[1].y      = (canvas.height - pong.gracze[1].dlugosc)/2;
 }
 
-// reset po zdobyciu punktu
-function graReset() {
-    pong.pilka.x          = canvas.width/2;
-    pong.pilka.y          = canvas.height/2;
-    pong.pauza            = true;
-    pong.pilka.offsetX    = 6;
-    pong.pilka.offsetY    = 2;
-    pong.gracze[0].x      = 0;
-    pong.gracze[1].x      = canvas.width - pong.gracze[1].szerokosc;
-    pong.gracze[0].y      = (canvas.height - pong.gracze[0].dlugosc)/2;
-    pong.gracze[1].y      = (canvas.height - pong.gracze[1].dlugosc)/2;
-}
-
 // obsluga klawiszy a,z,k,m,spacja - zdarzenie nacisniecia klawisza
 function keyDownHandler(e) {
     if (e.keyCode == 65) { pong.gracze[0].doGory = true; } else
