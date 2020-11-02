@@ -45,9 +45,7 @@ function graInit() {
     pong.stan      = 0;  // 0: poczatek, 1: gra w trakcie, 2: zdobyty punkt, 3: koniec
     pong.pauza     = true;
     pong.pilka     = new Pilka(10, '#d50');
-    pong.gracze    = [];
-    pong.gracze[0] = new Rakietka('Gracz Lewy',  15, 60, 7, '#07e');
-    pong.gracze[1] = new Rakietka('Gracz Prawy', 15, 60, 7, '#07e');
+    pong.gracz = new Rakietka('Gracz Prawy', 15, 60, 7, '#07e');
     pong.liczbaZyc = 10;
     pong.zwyciezca = 0;
     graReset();
@@ -58,29 +56,23 @@ function graReset() {
     pong.pilka.x          = canvas.width/2;
     pong.pilka.y          = canvas.height/2;
     pong.pauza            = true;
-    pong.pilka.offsetX    = 6;
+    pong.pilka.offsetX    = -6;
     pong.pilka.offsetY    = 2;
-    pong.gracze[0].x      = 0;
-    pong.gracze[1].x      = canvas.width - pong.gracze[1].szerokosc;
-    pong.gracze[0].y      = (canvas.height - pong.gracze[0].dlugosc)/2;
-    pong.gracze[1].y      = (canvas.height - pong.gracze[1].dlugosc)/2;
+    pong.gracz.x      = canvas.width - pong.gracz.szerokosc;
+    pong.gracz.y      = (canvas.height - pong.gracz.dlugosc)/2;
 }
 
-// obsluga klawiszy a,z,k,m,spacja - zdarzenie nacisniecia klawisza
+// obsluga klawiszy strzałkado góry, strzałka do dołu, spacja - zdarzenie nacisniecia klawisza
 function keyDownHandler(e) {
-    if (e.keyCode == 65) { pong.gracze[0].doGory = true; } else
-    if (e.keyCode == 75) { pong.gracze[1].doGory = true; } else
-    if (e.keyCode == 90) { pong.gracze[0].doDolu = true; } else
-    if (e.keyCode == 77) { pong.gracze[1].doDolu = true; } else
+    if (e.keyCode == 38) { pong.gracz.doGory = true; } else
+    if (e.keyCode == 40) { pong.gracz.doDolu = true; } else
     if (e.keyCode == 32) { pong.pauza = !pong.pauza }
 }
 
-// obsluga klawiszy a,z,k,m - zdarzenie puszczenia klawisza
+// obsluga klawiszy k,m - zdarzenie puszczenia klawisza
 function keyUpHandler(e) {
-    if (e.keyCode == 65) { pong.gracze[0].doGory = false; } else
-    if (e.keyCode == 75) { pong.gracze[1].doGory = false; } else
-    if (e.keyCode == 90) { pong.gracze[0].doDolu = false; } else
-    if (e.keyCode == 77) { pong.gracze[1].doDolu = false; }
+    if (e.keyCode == 38) { pong.gracz.doGory = false; } else
+    if (e.keyCode == 40) { pong.gracz.doDolu = false; }
 }
 
 document.addEventListener("keydown", keyDownHandler);
@@ -103,10 +95,8 @@ function czyOdbiciePilki(rect,circle){
 function wyswietlWynik() {
     ctx.font = "16px Verdana";
     ctx.fillStyle = "#d46";
-    ctx.textAlign = "left";
-    ctx.fillText(pong.gracze[0].nazwa + ": " + pong.gracze[0].wynik, 20, 20);
     ctx.textAlign = "right";
-    ctx.fillText(pong.gracze[1].nazwa + ": " + pong.gracze[1].wynik, canvas.width - 20, 20);
+    ctx.fillText(pong.gracz.nazwa + ": " + pong.gracz.wynik, canvas.width - 20, 20);
 }
 
 // wyswietl naglowek
@@ -128,8 +118,7 @@ function wyswietlWskazowki(tekst) {
 // rysuj stan gry
 function graRysuj() {
     pong.pilka.rysuj();
-    pong.gracze[0].rysuj();
-    pong.gracze[1].rysuj();
+    pong.gracz.rysuj();
     wyswietlWynik();
 }
 
@@ -144,50 +133,47 @@ function graPrzeksztalc() {
         pong.pilka.offsetY = -pong.pilka.offsetY;
     }
 
-    // obsluga graczy
-    for (i = 0; i < pong.gracze.length; i++) {
+    if (pong.pilka.x - pong.pilka.promien/2 <= 0) {
+      pong.pilka.offsetX = -pong.pilka.offsetX;
+    }
+
+    // obsluga gracza
+    // for (i = 0; i < pong.gracz.length; i++) {
         // przesuniecie rakietki w gore
-        if (pong.gracze[i].doGory && pong.gracze[i].y > 0) {
-            pong.gracze[i].y -= pong.gracze[i].offset;
+        if (pong.gracz.doGory && pong.gracz.y > 0) {
+            pong.gracz.y -= pong.gracz.offset;
         }
 
         // przesuniecie rakietki w dol
-        if (pong.gracze[i].doDolu && pong.gracze[i].y + pong.gracze[i].dlugosc < canvas.height) {
-            pong.gracze[i].y += pong.gracze[i].offset;
+        if (pong.gracz.doDolu && pong.gracz.y + pong.gracz.dlugosc < canvas.height) {
+            pong.gracz.y += pong.gracz.offset;
         }
 
         // odbijanie pilki
-        if (czyOdbiciePilki(pong.gracze[i], pong.pilka)) {
+        if (czyOdbiciePilki(pong.gracz, pong.pilka)) {
             pong.pilka.offsetX = -pong.pilka.offsetX;
 
             // jesli w trakcie odbicia rakietka sie rusza, to zmieniamy offset Y (pilka zmienia kat)
-            if (pong.gracze[i].doGory) { pong.pilka.offsetY--; }
-            if (pong.gracze[i].doDolu) { pong.pilka.offsetY++; }
+            if (pong.gracz.doGory) { pong.pilka.offsetY--; }
+            if (pong.gracz.doDolu) { pong.pilka.offsetY++; }
         }
-    }
-
-    // zdobycie punktu: gracz P
-    if (pong.pilka.x < pong.gracze[0].szerokosc) {
-        pong.gracze[1].wynik++;
-        pong.stan = 2;
-        pong.pauza = true;
-    }
+    // }
 
     // zdobycie punktu: gracz L
-    if (pong.pilka.x > canvas.width - pong.gracze[1].szerokosc) {
-        pong.gracze[0].wynik++;
+    if (pong.pilka.x > canvas.width - pong.gracz.szerokosc) {
+        // pong.gracz.wynik++;
         pong.stan = 2;
         pong.pauza = true;
     }
 
     // wygrana gracza i
-    for (i = 0; i < pong.gracze.length; i++) {
-        if (pong.gracze[i].wynik == pong.liczbaZyc) {
+    // for (i = 0; i < pong.gracz.length; i++) {
+        if (pong.gracz.wynik == pong.liczbaZyc) {
             pong.stan = 3;
             pong.pauza = true;
             pong.zwyciezca = i;
         }
-    }
+    // }
 }
 
 // funkcja glowna zawierajaca logike gry
@@ -198,17 +184,17 @@ function graj() {
     if (pong.pauza) {
         switch(pong.stan) {
             case 0:
-                wyswietlNaglowek('Poruszanie rakietkami: A,Z oraz K,M');
+                wyswietlNaglowek('Poruszanie rakietka:strzałki góra i dół');
                 wyswietlWskazowki('(Wciśnij SPACJĘ)');
                 break;
             case 2:
                 graReset();
-                wyswietlNaglowek('Punkt!');
+                // wyswietlNaglowek('Punkt!');
                 wyswietlWskazowki('(Wciśnij SPACJĘ)');
                 break;
             case 3:
                 graReset();
-                wyswietlNaglowek(pong.gracze[pong.zwyciezca].nazwa + ' wygrywa!');
+                wyswietlNaglowek(pong.gracz[pong.zwyciezca].nazwa + 'wygrywa!');
                 wyswietlWskazowki('Ponowna gra: SPACJA');
                 break;
             default:
