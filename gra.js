@@ -42,12 +42,31 @@ function Rakietka(nazwa, szerokosc, dlugosc, offset, kolor) {
     }
 }
 
+function Deseczka(x, y, szerokosc, dlugosc, kolor) {
+    this.x         = x;
+    this.y         = y;
+    this.szerokosc = szerokosc;
+    this.dlugosc   = dlugosc;
+    this.kolor     = kolor;
+    this.rysuj     = function() {
+        ctx.beginPath();
+        ctx.rect(this.x, this.y, this.szerokosc, this.dlugosc);
+        ctx.fillStyle = this.kolor;
+        ctx.fill();
+        ctx.closePath();
+    }
+}
+
 // inicjacja nowej gry
 function graInit() {
     pong.stan      = 0;  // 0: poczatek, 1: gra w trakcie, 2: zdobyty punkt, 3: koniec
     pong.pauza     = true;
     pong.pilka     = new Pilka(10, '#d50');
     pong.gracz = new Rakietka('Gracz', 100, 15, 7, '#07e');
+    pong.przeszkody = []
+    pong.przeszkody[0] = new Deseczka(5, 5, 100, 15, '000');
+    pong.przeszkody[1] = new Deseczka(350, 5, 100, 15, '000');
+    pong.przeszkody[2] = new Deseczka(700, 5, 100, 15, '000');
     pong.liczbaZyc = 10;
     pong.zwyciezca = 0;
     graReset();
@@ -58,8 +77,8 @@ function graReset() {
     pong.pilka.x          = canvas.width/2;
     pong.pilka.y          = canvas.height/2;
     pong.pauza            = true;
-    pong.pilka.offsetX    = 6;
-    pong.pilka.offsetY    = 2;
+    pong.pilka.offsetX    = 3;
+    pong.pilka.offsetY    = 1;
     pong.gracz.x      = (canvas.width - pong.gracz.szerokosc)/2;
     pong.gracz.y      = (canvas.height - pong.gracz.dlugosc);
 }
@@ -121,6 +140,11 @@ function wyswietlWskazowki(tekst) {
 function graRysuj() {
     pong.pilka.rysuj();
     pong.gracz.rysuj();
+
+    for (i = 0; i < pong.przeszkody.length; i++) {
+      pong.przeszkody[i].rysuj();
+    }
+
     wyswietlWynik();
 }
 
@@ -155,6 +179,12 @@ function graPrzeksztalc() {
         // jesli w trakcie odbicia rakietka sie rusza, to zmieniamy offset Y (pilka zmienia kat)
         if (pong.gracz.wPrawo) { pong.pilka.offsetY--; }
         if (pong.gracz.wLewo) { pong.pilka.offsetY++; }
+    }
+
+    for (i = 0; i < pong.przeszkody.length; i++) {
+      if (czyOdbiciePilki(pong.przeszkody[i], pong.pilka)) {
+          pong.pilka.offsetY = -pong.pilka.offsetY;
+      }
     }
 
     // zdobycie punktu: gracz L
