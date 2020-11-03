@@ -66,8 +66,6 @@ function graReset() {
 
 // obsluga klawiszy strzałka prawo i lewo, spacja - zdarzenie nacisniecia klawisza
 function keyDownHandler(e) {
-    // if (e.keyCode == 38) { pong.gracz.doGory = true; } else
-    // if (e.keyCode == 40) { pong.gracz.doDolu = true; } else
     if (e.keyCode == 37) { pong.gracz.wPrawo = true; } else
     if (e.keyCode == 39) { pong.gracz.wLewo = true; } else
     if (e.keyCode == 32) { pong.pauza = !pong.pauza }
@@ -75,8 +73,6 @@ function keyDownHandler(e) {
 
 // obsluga klawiszy strzałka prawo i lewo - zdarzenie puszczenia klawisza
 function keyUpHandler(e) {
-    // if (e.keyCode == 38) { pong.gracz.doGory = false; } else
-    // if (e.keyCode == 40) { pong.gracz.doGory = false; } else
     if (e.keyCode == 37) { pong.gracz.wPrawo = false; } else
     if (e.keyCode == 39) { pong.gracz.wLewo = false; }
 }
@@ -144,21 +140,9 @@ function graPrzeksztalc() {
       pong.pilka.offsetX = -pong.pilka.offsetX;
     }
 
-    // obsluga gracza
-    // for (i = 0; i < pong.gracz.length; i++) {
-        // przesuniecie rakietki w gore
-        // if (pong.gracz.doGory && pong.gracz.y > 0) {
-        //     pong.gracz.y -= pong.gracz.offset;
-        // }
-
         if (pong.gracz.wPrawo && pong.gracz.x > 0) {
             pong.gracz.x -= pong.gracz.offset;
         }
-
-        // przesuniecie rakietki w dol
-        // if (pong.gracz.doDolu && pong.gracz.y + pong.gracz.dlugosc < canvas.height) {
-        //     pong.gracz.y += pong.gracz.offset;
-        // }
 
         if (pong.gracz.wLewo && pong.gracz.x + pong.gracz.szerokosc < canvas.width) {
             pong.gracz.x += pong.gracz.offset;
