@@ -140,23 +140,22 @@ function graPrzeksztalc() {
       pong.pilka.offsetX = -pong.pilka.offsetX;
     }
 
-        if (pong.gracz.wPrawo && pong.gracz.x > 0) {
-            pong.gracz.x -= pong.gracz.offset;
-        }
+    if (pong.gracz.wPrawo && pong.gracz.x > 0) {
+        pong.gracz.x -= pong.gracz.offset;
+    }
 
-        if (pong.gracz.wLewo && pong.gracz.x + pong.gracz.szerokosc < canvas.width) {
-            pong.gracz.x += pong.gracz.offset;
-        }
+    if (pong.gracz.wLewo && pong.gracz.x + pong.gracz.szerokosc < canvas.width) {
+        pong.gracz.x += pong.gracz.offset;
+    }
 
-        // odbijanie pilki
-        if (czyOdbiciePilki(pong.gracz, pong.pilka)) {
-            pong.pilka.offsetY = -pong.pilka.offsetY;
+    // odbijanie pilki
+    if (czyOdbiciePilki(pong.gracz, pong.pilka)) {
+        pong.pilka.offsetY = -pong.pilka.offsetY;
 
-            // jesli w trakcie odbicia rakietka sie rusza, to zmieniamy offset Y (pilka zmienia kat)
-            if (pong.gracz.wPrawo) { pong.pilka.offsetY--; }
-            if (pong.gracz.wLewo) { pong.pilka.offsetY++; }
-        }
-    // }
+        // jesli w trakcie odbicia rakietka sie rusza, to zmieniamy offset Y (pilka zmienia kat)
+        if (pong.gracz.wPrawo) { pong.pilka.offsetY--; }
+        if (pong.gracz.wLewo) { pong.pilka.offsetY++; }
+    }
 
     // zdobycie punktu: gracz L
     if (pong.pilka.y >= canvas.height - pong.gracz.dlugosc) {
@@ -166,13 +165,11 @@ function graPrzeksztalc() {
     }
 
     // wygrana gracza i
-    // for (i = 0; i < pong.gracz.length; i++) {
-        if (pong.gracz.wynik == pong.liczbaZyc) {
-            pong.stan = 3;
-            pong.pauza = true;
-            pong.zwyciezca = i;
-        }
-    // }
+    if (pong.gracz.wynik == pong.liczbaZyc) {
+        pong.stan = 3;
+        pong.pauza = true;
+        pong.zwyciezca = i;
+    }
 }
 
 // funkcja glowna zawierajaca logike gry
